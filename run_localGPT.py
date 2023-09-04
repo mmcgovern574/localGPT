@@ -79,7 +79,7 @@ def load_model(device_type, model_id, model_basename=None):
                 model_basename=model_basename,
                 use_safetensors=True,
                 trust_remote_code=True,
-                device="cuda:0",
+                device="cuda:0", #was :0
                 use_triton=False,
                 quantize_config=None,
             )
@@ -178,6 +178,15 @@ def main(device_type, show_sources):
     """
 
     logging.info(f"Running on: {device_type}")
+    
+    device_count = torch.cuda.device_count()
+    current_device_number = torch.cuda.current_device()
+    current_device_name = torch.cuda.get_device_name(current_device_number)
+
+    logging.info(f"Device Count: {device_count}")
+    logging.info(f"Current Device Number: {current_device_number}")
+    logging.info(f"Current Device Name: {current_device_name}")
+
     logging.info(f"Display Source Documents set to: {show_sources}")
 
     embeddings = HuggingFaceInstructEmbeddings(model_name=EMBEDDING_MODEL_NAME, model_kwargs={"device": device_type})
